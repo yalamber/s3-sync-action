@@ -36,10 +36,11 @@ ${AWS_SECRET_ACCESS_KEY}
 ${AWS_REGION}
 text
 EOF
-
-export IFS=","
+OLDIFS=$IFS
+IFS=","
 for bucket in $AWS_S3_BUCKET; 
 do
+  IFS=OLDIFS
   printf "uploading to ${bucket}\n"
   # Sync using our dedicated profile and suppress verbose messages.
   # All other flags are optional via the `args:` directive.
