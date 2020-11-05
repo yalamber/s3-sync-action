@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -37,21 +37,13 @@ ${AWS_REGION}
 text
 EOF
 
-IFS=','
-
-#Read the split words into an array based on space delimiter
-read -a strarr <<< "$AWS_S3_BUCKET"
-
-#Count the total words
-echo "There are ${#strarr[*]} buckets to upload to."
-
-# Print each value of the array by using the loop
-for val in "${strarr[@]}";
+export IFS=","
+for bucket in $AWS_S3_BUCKET; 
 do
-  printf "uploading to ${val}\n"
+  printf "uploading to ${bucket}\n"
   # Sync using our dedicated profile and suppress verbose messages.
   # All other flags are optional via the `args:` directive.
-  sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${val}/${DEST_DIR} \
+  sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${bucket}/${DEST_DIR} \
               --profile s3-sync-action \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
