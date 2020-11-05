@@ -37,12 +37,25 @@ ${AWS_REGION}
 text
 EOF
 
-# Sync using our dedicated profile and suppress verbose messages.
-# All other flags are optional via the `args:` directive.
-sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
+IFS=','
+
+#Read the split words into an array based on space delimiter
+read -a strarr <<< "$AWS_S3_BUCKET"
+
+#Count the total words
+echo "There are ${#strarr[*]} buckets to upload to."
+
+# Print each value of the array by using the loop
+for val in "${strarr[@]}";
+do
+  printf "uploading to ${val}\n"
+  # Sync using our dedicated profile and suppress verbose messages.
+  # All other flags are optional via the `args:` directive.
+  sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${val}/${DEST_DIR} \
               --profile s3-sync-action \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
+done
 
 # Clear out credentials after we're done.
 # We need to re-run `aws configure` with bogus input instead of
