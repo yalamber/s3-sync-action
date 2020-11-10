@@ -1,6 +1,6 @@
-name: "S3 Sync"
-description: "Sync a directory to an AWS S3 repository"
-author: jakejarvis
+name: "Multi Bucket S3 Sync"
+description: "Sync a directory to multiple AWS S3 repository"
+author: yalamber
 runs:
   using: docker
   image: Dockerfile
